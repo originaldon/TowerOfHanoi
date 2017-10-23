@@ -1,79 +1,50 @@
-import java.util.ArrayList;
-
 public class Game {
 
-    ArrayList<Integer> taarnA = new ArrayList<>();
-    ArrayList<Integer> taarnB = new ArrayList<>();
-    ArrayList<Integer> taarnC = new ArrayList<>();
+    Tower towerA;
+    Tower towerB;
+    Tower towerC;
 
     public Game(int amountDiscs){
 
-        setup(amountDiscs);
-        move(taarnA, taarnB, taarnC);
+        towerA = new Tower(amountDiscs);
+        towerB = new Tower(amountDiscs);
+        towerC = new Tower(amountDiscs);
+        towerA.setup();
 
-        System.out.println("1: " + taarnA);
-        System.out.println("2: " + taarnB);
-        System.out.println("3: " + taarnC);
+        writeTowers();
+        solve(amountDiscs, towerA, towerB, towerC);
+
     }
 
-    private void setup(int amount){
+    public void solve(int amount, Tower tStart, Tower tExtra, Tower tEnd){
 
-        for (int i = 0; i < amount; i++){
+            if (amount == 1){
 
-            taarnA.add(i + 1);
+                move(tStart, tEnd);
+                writeTowers();
+            }else{
+                solve(amount - 1, tStart, tEnd, tExtra);
+                move(tStart, tEnd);
+                writeTowers();
+                solve(amount -1, tExtra, tStart, tEnd);
+            }
+    }
+
+    private boolean move(Tower tA, Tower tB){
+
+        if(tB.add(tA.getTop())){
+            tA.remove();
+            return true;
         }
+        return false;
     }
 
-    private void move(ArrayList<Integer> al1, ArrayList<Integer> al2, ArrayList<Integer> al3){
+    private void writeTowers(){
 
-        System.out.println("1: " + al1);
-        System.out.println("2: " + al2);
-        System.out.println("3: " + al3);
+        System.out.println("1: " + towerA.getString());
+        System.out.println("2: " + towerB.getString());
+        System.out.println("3: " + towerC.getString());
         System.out.println();
-
-        if (al2.size() == 0 || al1.get(0) < al2.get(0)) {
-
-                al2.add(0, al1.get(0));
-                al1.remove(0);
-                move(al1, al2, al3);
-
-        }
-        else if (al3.size() == 0 || al1.get(0) < al3.get(0)) {
-
-            al3.add(0, al1.get(0));
-            al1.remove(0);
-            move(al1, al2, al3);
-        }
-        else if (al2.get(0) < al3.get(0)){
-
-            al3.add(0,al2.get(0));
-            al2.remove(0);
-            move(al1, al2, al3);
-        }
-        else if (al1.size() != 0 || al3.get(0) < al1.get(0)){
-
-            al1.add(0,al3.get(0));
-            al3.remove(0);
-            move(al1, al2, al3);
-        }
-        else if (al3.get(0) < al2.get(0)) {
-
-            al2.add(0,al3.get(0));
-            al3.remove(0);
-            move(al1, al2, al3);
-        }
-
-        else if (al1.size() != 0 || al2.get(0) < al1.get(0)) {
-
-            al1.add(0,al2.get(0));
-            al2.remove(0);
-            move(al1, al2, al3);
-        }
-
-
-
     }
-
-
 }
 
